@@ -12,8 +12,14 @@ namespace po = boost::program_options;
 #include <csignal>
 #include <cstdlib>
 
+#include "antlr4-runtime/antlr4-runtime.h"
+#include "antlr4-runtime/SceneLexer.h"
+#include "antlr4-runtime/SceneParser.h"
+
 namespace logging = boost::log;
+
 using namespace std;
+using namespace antlr4;
 
 //#include "XN_Render.h"
 //#include "XN_Ifd.h"

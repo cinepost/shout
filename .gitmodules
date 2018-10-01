@@ -1,0 +1,7 @@
+[submodule "third_party/hougeo"]
+	path = third_party/hougeo
+	url = https://github.com/nyue/hougeo.git
+	branch = master
+[submodule "third_party/RadeonRays_SDK"]
+	path = third_party/RadeonRays_SDK
+	url = https://github.com/GPUOpen-LibrariesAndSDKs/RadeonRays_SDK.git
