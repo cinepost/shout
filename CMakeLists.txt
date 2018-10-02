@@ -1,8 +1,10 @@
+CMAKE_MINIMUM_REQUIRED( VERSION 3.5 )
+
 PROJECT( Shout )
 
-SET( CMAKE_INSTALL_PREFIX /opt/shout )
+LIST( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
-CMAKE_MINIMUM_REQUIRED( VERSION 3.5 )
+SET( CMAKE_INSTALL_PREFIX /opt/shout )
 
 if(UNIX AND NOT APPLE)
     set(LINUX TRUE)
@@ -23,6 +25,12 @@ ENDIF()
 
 set( CMAKE_CXX_STANDARD 11 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
+
+# set variable pointing to the antlr tool that supports C++
+set(ANTLR4CPP_JAR_LOCATION ${PROJECT_SOURCE_DIR}/third_party/antlr/antlr-4.7.1-complete.jar)
+
+# add external build for antlrcpp
+include( ExternalAntlr4Cpp )
 
 if (MSVC)
 	ADD_DEFINITIONS(/W3)

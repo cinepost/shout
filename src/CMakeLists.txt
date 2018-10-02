@@ -1,8 +1,8 @@
 set( GENERATED_SOURCES
-	./generated/IFDBaseVisitor.cpp
-	./generated/IFDVisitor.cpp
-	./generated/IFDParser.cpp
-	./generated/IFDLexer.cpp
+	${PROJECT_SOURCE_DIR}/generated/IFDBaseVisitor.cpp
+	${PROJECT_SOURCE_DIR}/generated/IFDVisitor.cpp
+	${PROJECT_SOURCE_DIR}/generated/IFDParser.cpp
+	${PROJECT_SOURCE_DIR}/generated/IFDLexer.cpp
 )
 
 foreach( src_file ${GENERATED_SOURCES} )
@@ -14,12 +14,10 @@ endforeach( src_file ${GENERATED_SOURCES} )
 add_custom_target( GenerateParser DEPENDS ${GENERATED_SOURCES} )
 add_custom_command( OUTPUT ${GENERATED_SOURCES}
 	COMMAND 
-	${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/generated/
+	${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/generatedZ/
 	
 	COMMAND
-	"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/generated/ -package antlrcpptest ${PROJECT_SOURCE_DIR}/IFD.g4
-	WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-	DEPENDS ${PROJECT_SOURCE_DIR}/IFD.g4
+	"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR4CPP_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/generated/ -package shout ${PROJECT_SOURCE_DIR}/src/IFD.g4
 )
 
 include_directories(
@@ -34,7 +32,7 @@ include_directories(
 
 set( SOURCES
 	./shout.cpp
-	${GENERATED_SOURCESC}
+	${GENERATED_SOURCES}
 )
 
 if (NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -45,9 +43,7 @@ endif()
 
 foreach( src_file ${GENERATED_SOURCES} )
 	set_source_files_properties(
-		${src_file}
-		PROPERTIES
-		COMPILE_FLAGS "${COMPILE_FLAGS} ${flags_1}"
+		${src_file} PROPERTIES COMPILE_FLAGS "${COMPILE_FLAGS} ${flags_1}"
 	)
 endforeach( src_file ${GENERATED_SOURCES} )
 
@@ -64,7 +60,27 @@ add_executable ( shout ${SOURCES} )
 set_target_properties( shout PROPERTIES OUTPUT_NAME "shout" )
 
 add_dependencies( shout GenerateParser )
+
+if(APPLE)
+  target_link_libraries(shout "${PROJECT_SOURCE_DIR}/libs/libantlr4-runtime.dylib")
+elseif(UNIX)
+  target_link_libraries(shout "${PROJECT_SOURCE_DIR}/libs/libantlr4-runtime.so")
+endif()  
  
-target_link_libraries( shout Boost::program_options Boost::log Threads::Threads )
+target_link_libraries( shout antlr4_static Boost::program_options Boost::log Threads::Threads )
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+add_custom_command(TARGET shout POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  "${PROJECT_SOURCE_DIR}/libs/libantlr4-runtime.so"
+  $<TARGET_FILE_DIR:shout>)
+endif()
+
+if(APPLE)
+add_custom_command(TARGET shout POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  "${PROJECT_SOURCE_DIR}/libs/antlr4-runtime.dylib"
+  $<TARGET_FILE_DIR:shout>)
+endif()
 
 install(TARGETS shout DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
