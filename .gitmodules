@@ -5,3 +5,6 @@
 [submodule "third_party/RadeonRays_SDK"]
 	path = third_party/RadeonRays_SDK
 	url = https://github.com/GPUOpen-LibrariesAndSDKs/RadeonRays_SDK.git
+[submodule "third_party/antlr4"]
+	path = third_party/antlr4
+	url = https://github.com/antlr/antlr4.git

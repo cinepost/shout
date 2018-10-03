@@ -27,10 +27,7 @@ set( CMAKE_CXX_STANDARD 11 )
 set( CMAKE_CXX_STANDARD_REQUIRED ON )
 
 # set variable pointing to the antlr tool that supports C++
-set(ANTLR4CPP_JAR_LOCATION ${PROJECT_SOURCE_DIR}/third_party/antlr/antlr-4.7.1-complete.jar)
-
-# add external build for antlrcpp
-include( ExternalAntlr4Cpp )
+set(ANTLR4CPP_JAR_LOCATION ${PROJECT_SOURCE_DIR}/third_party/antlr-4.7.1-complete.jar)
 
 if (MSVC)
 	ADD_DEFINITIONS(/W3)
@@ -48,4 +45,6 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/third_party 
 )
 
-add_subdirectory( src )
+add_subdirectory( third_party/antlr4/runtime/Cpp )
+add_subdirectory( src/shout_lib )
+add_subdirectory( src/shout_cmd )
