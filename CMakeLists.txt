@@ -42,7 +42,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 include_directories( 
 	${CMAKE_CURRENT_SOURCE_DIR}/include 
-	${CMAKE_CURRENT_SOURCE_DIR}/third_party 
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party
+	${CMAKE_CURRENT_SOURCE_DIR}/third_party/include 
 )
 
 add_subdirectory( third_party/antlr4/runtime/Cpp )
