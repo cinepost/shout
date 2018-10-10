@@ -46,6 +46,7 @@ include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/third_party/include 
 )
 
+add_subdirectory( third_party/hougeo )
 add_subdirectory( third_party/antlr4/runtime/Cpp )
 add_subdirectory( src/shout_lib )
 add_subdirectory( src/shout_cmd )
