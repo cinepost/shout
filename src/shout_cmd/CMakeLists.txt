@@ -4,7 +4,11 @@ set (SOURCES
 
 # find boost libs
 find_package( Boost COMPONENTS program_options log REQUIRED )
-include_directories( ${Boost_INCLUDE_DIRS} )
+include_directories( 
+	${Boost_INCLUDE_DIRS} 
+	${PROJECT_SOURCE_DIR}/src
+	${PROJECT_SOURCE_DIR}/src/shout_lib
+)
 
 # we will use static libs
 add_definitions(-DBOOST_LOG_DYN_LINK)

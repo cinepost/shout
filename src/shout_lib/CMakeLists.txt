@@ -31,13 +31,15 @@ include_directories(
 	${ANTLR4_SOURCE_DIR}/dfa
 	${ANTLR4_SOURCE_DIR}/tree
 	${ANTLR4_SOURCE_DIR}/support
-	${PROJECT_SOURCE_DIR}/src/copper_lib
+	${PROJECT_SOURCE_DIR}/src
 	${PROJECT_SOURCE_DIR}/src/generated
 )
 
 set( SOURCES
 	./utils.cpp
 	./SCN/SCN_Scene.cpp
+	./SCN/SCN_IOTranslator.cpp
+	./SCN/SCN_IFDTranslator.cpp
 	./display.cpp
 	./renderer.cpp
 	./renderer_opengl.cpp

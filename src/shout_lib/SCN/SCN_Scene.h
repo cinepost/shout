@@ -4,6 +4,9 @@
 #include <string>
 #include <vector>
 
+#include <copper_lib/SYS/SYS_Compiler.h>
+#include <copper_lib/SYS/SYS_Types.h>
+
 class SCN_Scene {
 	public:
 		SCN_Scene();

@@ -3,24 +3,25 @@
 
 #include <string>
 #include <vector>
-#include <ifstream>
+#include <iostream>
+#include <fstream>
 
-#include "scene.h"
-
+#include <SCN/SCN_Scene.h>
 
 class SCN_IOTranslator {
 	public:
-		SCN_IOTranslator();
-                virtual ~SCN_IOTranslator();
+	//	SCN_IOTranslator();
+        virtual ~SCN_IOTranslator();
 
-                virtual const char *        formatName () const = 0;
-                virtual int                 checkExtension (const char *name) = 0;
-                virtual void                getFileExtensions (std::std::vector<char *> &extensions) const = 0;
+        virtual const char         *formatName() const = 0;
+        virtual int                 checkExtension(const char *name) = 0;
 
-                // Method to check if the given magic number matches the magic number. Return true on a match.
-                virtual int                 checkMagicNumber (unsigned magic) = 0;
+        virtual void                getFileExtensions(std::vector<std::string> &extensions) const = 0;
 
-                virtual SCN_Scene::IOStatus fileLoad (SCN_Scene *scn, std::ifstream &ifs, bool ate_magic) = 0;
+        // Method to check if the given magic number matches the magic number. Return true on a match.
+        virtual int                 checkMagicNumber(unsigned magic) = 0;
+
+        virtual SCN_Scene::IOStatus fileLoad(SCN_Scene *scn, std::ifstream &ifs, bool ate_magic) = 0;
 };
 
 

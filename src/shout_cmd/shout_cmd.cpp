@@ -16,7 +16,10 @@ namespace po = boost::program_options;
 //#include "IFDLexer.h"
 //#include "IFDParser.h"
 
-#include "../shout_lib/scene.h"
+#include <shout_lib/SCN/SCN_IORegistry.h>
+#include <shout_lib/SCN/SCN_IFDTranslator.h>
+
+#include <shout_lib/SCN/SCN_Scene.h>
 #include "../shout_lib/renderer.h"
 #include "../shout_lib/renderer_opengl.h"
 
@@ -118,10 +121,18 @@ int main(int argc, char **argv) {
         notify(vm);
     }
 
-    Scene    *scene = 0;
-    Renderer *renderer = 0;
+    // Populate IO_Registry with internal and external scene translators
+    SCN_IORegistry scene_io_registry;
 
-    scene = new Scene();
+    scene_io_registry.addIOTranslator(
+        SCN_IFDTranslator::myExtensions, 
+        SCN_IFDTranslator::myConstructor
+    );
+
+    SCN_Scene scene;
+    SCN_IOTranslator *translator = 0;
+    Renderer  *renderer = 0;
+
     renderer = new RendererOpenGL();
 
     if (vm.count("input-file")) {
@@ -132,27 +143,27 @@ int main(int argc, char **argv) {
         std::ifstream in_file(*fi);
         if ( in_file )
         {
-          if (!scene->load(in_file)) {
+          translator = scene_io_registry.getTranslatorByExt("ifd");
+          if (!translator->fileLoad(&scene, in_file, false)) {
             // error loading scene from file
-            BOOST_LOG_TRIVIAL(error) << "Error loadinf scnene from file " << *fi;
+            BOOST_LOG_TRIVIAL(error) << "Error loading scene from file " << *fi;
           }
         } else {
           // error opening scene file
           std::cerr << "Unable to open file " << *fi << " ! aborting..." << std::endl;
-          exit(EXIT_FAILURE);
         }
       }
     } else {
       // loading from stdin
       BOOST_LOG_TRIVIAL(debug) << "Reading scene from stdin ...\n";
-      if (!scene->load(std::cin)) {
+      translator = scene_io_registry.getTranslatorByExt("ifd");
+      if (!translator->fileLoad(&scene, std::cin, false)) {
         // error loading scene from stdin
         BOOST_LOG_TRIVIAL(error) << "Error loading scene from stdin !";
       }
     }
-
-    delete renderer;
-    delete scene;
+    if(translator)delete translator;
+    if(renderer)delete renderer;
   } 
   catch(exception& e) 
   { 

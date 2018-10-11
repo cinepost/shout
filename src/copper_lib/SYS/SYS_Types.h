@@ -1,6 +1,8 @@
 #ifndef __SYS_Types__
 #define __SYS_Types__
 
+#include "SYS_Compiler.h"
+
 /* Include system types */
 #include <limits>
 #include <sys/types.h>
