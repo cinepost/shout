@@ -122,11 +122,9 @@ int main(int argc, char **argv) {
     }
 
     // Populate IO_Registry with internal and external scene translators
-    SCN_IORegistry scene_io_registry;
-
-    scene_io_registry.addIOTranslator(
-        SCN_IFDTranslator::myExtensions, 
-        SCN_IFDTranslator::myConstructor
+    SCN_IORegistry::getInstance().addIOTranslator(
+      SCN_IFDTranslatorFactory::myExtensions, 
+      SCN_IFDTranslatorFactory::myConstructor
     );
 
     SCN_Scene scene;
@@ -143,8 +141,8 @@ int main(int argc, char **argv) {
         std::ifstream in_file(*fi);
         if ( in_file )
         {
-          translator = scene_io_registry.getTranslatorByExt("ifd");
-          if (!translator->fileLoad(&scene, in_file, false)) {
+          translator =  SCN_IORegistry::getInstance().getTranslatorByExt("ifd");
+          if (!translator->fileLoad(&scene, &in_file, false)) {
             // error loading scene from file
             BOOST_LOG_TRIVIAL(error) << "Error loading scene from file " << *fi;
           }
@@ -156,8 +154,8 @@ int main(int argc, char **argv) {
     } else {
       // loading from stdin
       BOOST_LOG_TRIVIAL(debug) << "Reading scene from stdin ...\n";
-      translator = scene_io_registry.getTranslatorByExt("ifd");
-      if (!translator->fileLoad(&scene, std::cin, false)) {
+      translator =  SCN_IORegistry::getInstance().getTranslatorByExt("ifd");
+      if (!translator->fileLoad(&scene, &std::cin, false)) {
         // error loading scene from stdin
         BOOST_LOG_TRIVIAL(error) << "Error loading scene from stdin !";
       }

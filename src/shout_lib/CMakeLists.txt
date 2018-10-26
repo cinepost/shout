@@ -38,6 +38,7 @@ include_directories(
 set( SOURCES
 	./utils.cpp
 	./SCN/SCN_Scene.cpp
+	./SCN/SCN_IORegistry.cpp
 	./SCN/SCN_IOTranslator.cpp
 	./SCN/SCN_IFDTranslator.cpp
 	./display.cpp
