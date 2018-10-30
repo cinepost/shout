@@ -1,5 +1,5 @@
-#ifndef __SCN_IFDTranslator_h__
-#define __SCN_IFDTranslator_h__
+#ifndef __SCN_OBJTranslator_h__
+#define __SCN_OBJTranslator_h__
 
 #include <string>
 #include <vector>
@@ -8,13 +8,13 @@
 
 #include <SCN/SCN_IOTranslator.h>
 
-static std::vector<std::string> _ifd_extensions = {".ifd",".ifd.gz",".ifd.zip"};
+static std::vector<std::string> _obj_extensions = {".obj"};
 
 
-class SCN_IFDTranslator : public SCN_IOTranslator {
+class SCN_OBJTranslator : public SCN_IOTranslator {
   public:
-    SCN_IFDTranslator();
-    ~SCN_IFDTranslator();
+    SCN_OBJTranslator();
+    ~SCN_OBJTranslator();
 
     const char         *formatName() const;
     int                 checkExtension(const char *name);
@@ -28,11 +28,11 @@ class SCN_IFDTranslator : public SCN_IOTranslator {
 };
 
 
-class SCN_IFDTranslatorFactory {
+class SCN_OBJTranslatorFactory {
     public:
         // factory methods
         static SCN_IOTranslator         *myConstructor();
         static std::vector<std::string> *myExtensions();
 };
 
-#endif // __SCN_IFDTranslator_h__
+#endif // __SCN_OBJTranslator_h__

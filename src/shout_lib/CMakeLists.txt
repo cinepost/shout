@@ -2,27 +2,49 @@ set( ANTLR4_SOURCE_DIR
 	${PROJECT_SOURCE_DIR}/third_party/antlr4/runtime/Cpp/runtime/src
 )
 
-set( GENERATED_SOURCES
+set( IFD_GENERATED_SOURCES
 	${PROJECT_SOURCE_DIR}/src/generated/IFDBaseVisitor.cpp
 	${PROJECT_SOURCE_DIR}/src/generated/IFDVisitor.cpp
 	${PROJECT_SOURCE_DIR}/src/generated/IFDParser.cpp
 	${PROJECT_SOURCE_DIR}/src/generated/IFDLexer.cpp
 )
 
-foreach( src_file ${GENERATED_SOURCES} )
+set( OBJ_GENERATED_SOURCES
+	${PROJECT_SOURCE_DIR}/src/generated/OBJBaseVisitor.cpp
+	${PROJECT_SOURCE_DIR}/src/generated/OBJVisitor.cpp
+	${PROJECT_SOURCE_DIR}/src/generated/OBJParser.cpp
+	${PROJECT_SOURCE_DIR}/src/generated/OBJLexer.cpp
+)
+
+foreach( src_file ${IFD_GENERATED_SOURCES} )
 	set_source_files_properties(
 		${src_file} PROPERTIES GENERATED TRUE
 	)
-endforeach( src_file ${GENERATED_SOURCES} )
+endforeach( src_file ${IFD_GENERATED_SOURCES} )
 
-add_custom_target( GenerateParser DEPENDS ${GENERATED_SOURCES} )
-add_custom_command( OUTPUT ${GENERATED_SOURCES}
+add_custom_command( OUTPUT ${IFD_GENERATED_SOURCES}
 	COMMAND 
 	${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/src/generated/
 	
 	COMMAND
 	"${Java_JAVA_EXECUTABLE}" -jar ${ANTLR4CPP_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/src/generated/ -package shout ${PROJECT_SOURCE_DIR}/src/shout_lib/IFD.g4
 )
+
+foreach( src_file ${OBJ_GENERATED_SOURCES} )
+	set_source_files_properties(
+		${src_file} PROPERTIES GENERATED TRUE
+	)
+endforeach( src_file ${OBJ_GENERATED_SOURCES} )
+
+add_custom_command( OUTPUT ${OBJ_GENERATED_SOURCES}
+	COMMAND 
+	${CMAKE_COMMAND} -E make_directory ${PROJECT_SOURCE_DIR}/src/generated/
+	
+  COMMAND
+  "${Java_JAVA_EXECUTABLE}" -jar ${ANTLR4CPP_JAR_LOCATION} -Werror -Dlanguage=Cpp -listener -visitor -o ${PROJECT_SOURCE_DIR}/src/generated/ -package shout ${PROJECT_SOURCE_DIR}/src/shout_lib/OBJ.g4
+)
+
+add_custom_target( GenerateParser DEPENDS ${IFD_GENERATED_SOURCES} ${OBJ_GENERATED_SOURCES} )
 
 include_directories(
 	${ANTLR4_SOURCE_DIR}
@@ -40,6 +62,7 @@ set( SOURCES
 	./SCN/SCN_Scene.cpp
 	./SCN/SCN_IORegistry.cpp
 	./SCN/SCN_IOTranslator.cpp
+	./SCN/SCN_OBJTranslator.cpp
 	./SCN/SCN_IFDTranslator.cpp
 	./display.cpp
 	./renderer.cpp

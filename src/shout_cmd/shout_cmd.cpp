@@ -2,6 +2,7 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
 #include <boost/program_options.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/algorithm/string/join.hpp>
 namespace po = boost::program_options;
 
@@ -17,6 +18,7 @@ namespace po = boost::program_options;
 //#include "IFDParser.h"
 
 #include <shout_lib/SCN/SCN_IORegistry.h>
+#include <shout_lib/SCN/SCN_OBJTranslator.h>
 #include <shout_lib/SCN/SCN_IFDTranslator.h>
 
 #include <shout_lib/SCN/SCN_Scene.h>
@@ -127,6 +129,11 @@ int main(int argc, char **argv) {
       SCN_IFDTranslatorFactory::myConstructor
     );
 
+    SCN_IORegistry::getInstance().addIOTranslator(
+      SCN_OBJTranslatorFactory::myExtensions, 
+      SCN_OBJTranslatorFactory::myConstructor
+    );
+
     SCN_Scene scene;
     SCN_IOTranslator *translator = 0;
     Renderer  *renderer = 0;
@@ -139,9 +146,13 @@ int main(int argc, char **argv) {
       BOOST_LOG_TRIVIAL(debug) << "Input scene files are: "<< boost::algorithm::join(files, " ") << "\n";
       for (vector<string>::const_iterator fi = files.begin(); fi != files.end(); ++fi) {
         std::ifstream in_file(*fi);
-        if ( in_file )
-        {
-          translator =  SCN_IORegistry::getInstance().getTranslatorByExt("ifd");
+        if ( in_file ) {
+          string file_extension = boost::filesystem::extension(*fi);
+          BOOST_LOG_TRIVIAL(debug) << "ext " << file_extension;
+          translator = SCN_IORegistry::getInstance().getTranslatorByExt(file_extension);
+
+          BOOST_LOG_TRIVIAL(debug) << "translator";
+          //BOOST_LOG_TRIVIAL(debug) << "Reading "<< *fi << " scene file with " << translator->formatName() << " translator";
           if (!translator->fileLoad(&scene, &in_file, false)) {
             // error loading scene from file
             BOOST_LOG_TRIVIAL(error) << "Error loading scene from file " << *fi;
@@ -154,7 +165,7 @@ int main(int argc, char **argv) {
     } else {
       // loading from stdin
       BOOST_LOG_TRIVIAL(debug) << "Reading scene from stdin ...\n";
-      translator =  SCN_IORegistry::getInstance().getTranslatorByExt("ifd");
+      translator =  SCN_IORegistry::getInstance().getTranslatorByExt(".ifd"); // default format for reading stdin is ".ifd"
       if (!translator->fileLoad(&scene, &std::cin, false)) {
         // error loading scene from stdin
         BOOST_LOG_TRIVIAL(error) << "Error loading scene from stdin !";

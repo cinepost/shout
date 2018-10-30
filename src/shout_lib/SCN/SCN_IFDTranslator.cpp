@@ -2,7 +2,9 @@
 #include <boost/log/trivial.hpp>
 #include <boost/log/expressions.hpp>
 
-#include <string.h>
+#include <string>
+#include <iostream>
+#include <sstream>
 
 #include "SCN_IFDTranslator.h"
 
@@ -23,7 +25,7 @@ const char *SCN_IFDTranslator::formatName() const{
 
 
 int SCN_IFDTranslator::checkExtension(const char *name) {
-    if (strcmp(name, "ifd"))return 0;
+    if (strcmp(name, ".ifd"))return 0;
     return 1;
 }
 
@@ -39,6 +41,10 @@ int SCN_IFDTranslator::checkMagicNumber(unsigned magic) {
 
 
 SCN_Scene::IOStatus SCN_IFDTranslator::fileLoad(SCN_Scene *scn, std::istream *in, bool ate_magic) {
+  std::string line;
+  while (std::getline(*in, line)) {
+    std::cout << line << std::endl;
+  }
     return true;
 }
 
